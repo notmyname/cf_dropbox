@@ -1,1 +1,10 @@
 Simple command line script to upload and share files with Rackspace Cloud Files
+
+Usage:
+
+$ ./cf_drop.py cf_drop.py 
+http://c2821672.cdn.cloudfiles.rackspacecloud.com/cf_drop.py
+
+In my case, I added the following to by .bash_profile:
+
+alias upload="/path/to/cf_dropbox/cf_drop.py"
