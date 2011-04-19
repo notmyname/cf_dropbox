@@ -8,14 +8,12 @@ import cloudfiles
 
 import cf_auth
 
-if len(sys.argv) < 2:
-    print >>sys.stderr, 'Usage: %s path [...]' % sys.argv[0]
-    sys.exit(1)
-
 usage = 'Usage: %prog [options] path1 [path2 [...]]'
 parser = OptionParser(usage=usage)
 parser.add_option('-D', '--domain', dest='domain', default=None,
                   help='Domain to use instead of the container\'s public URI')
+parser.add_option('-l', '--list', dest='list', default=None, action='store_true',
+                  help='Show your dropbox\'s listing')
 
 options, args = parser.parse_args()
 
@@ -27,6 +25,13 @@ conn = cloudfiles.get_connection(username=cf_auth.username,
 container = conn.create_container(DROPBOX_CONTAINER_NAME)
 # make sure the container is public
 container.make_public() 
+
+if options.list:
+    listing = container.list_objects_info()
+    for o in listing:
+        print o['name']
+    sys.exit(0)
+
 container_url = options.domain if options.domain else container.public_uri()
 if not container_url.startswith('http://'):
     container_url = 'http://' + container_url
