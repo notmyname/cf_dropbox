@@ -12,8 +12,10 @@ usage = 'Usage: %prog [options] path1 [path2 [...]]'
 parser = OptionParser(usage=usage)
 parser.add_option('-D', '--domain', dest='domain', default=None,
                   help='Domain to use instead of the container\'s public URI')
-parser.add_option('-l', '--list', dest='list', default=None, action='store_true',
-                  help='Show your dropbox\'s listing')
+parser.add_option('-l', '--list', dest='list', default=None,
+                action='store_true', help='Show your dropbox\'s listing')
+parser.add_option('-P', '--purge', dest='purge', default=None,
+                action='store_true', help='Purge the objects')
 
 options, args = parser.parse_args()
 
@@ -24,7 +26,7 @@ conn = cloudfiles.get_connection(username=cf_auth.username,
 # make sure we have the container
 container = conn.create_container(DROPBOX_CONTAINER_NAME)
 # make sure the container is public
-container.make_public() 
+container.make_public()
 
 if options.list:
     listing = container.list_objects_info()
@@ -40,8 +42,13 @@ for filename in args:
     try:
         object_name = filename.replace(' ', '_')
         obj = container.create_object(object_name)
-        obj.load_from_filename(filename)
+        if options.purge:
+            obj.purge_from_cdn()
+        else:
+            obj.load_from_filename(filename)
     except cloudfiles.errors.ResponseError, err:
         print >>sys.stderr, err
     else:
+        if options.purge:
+            print 'Purged',
         print container_url + '/' + object_name
