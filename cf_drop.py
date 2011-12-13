@@ -3,6 +3,7 @@
 import sys
 import os
 from optparse import OptionParser
+from urllib import quote
 
 import cloudfiles
 
@@ -46,6 +47,8 @@ for filename in args:
             obj.purge_from_cdn()
         else:
             obj.load_from_filename(filename)
+            obj.metadata['Original-Name'] = quote(filename)
+            obj.sync_metadata()
     except cloudfiles.errors.ResponseError, err:
         print >>sys.stderr, err
     else:
