@@ -24,10 +24,8 @@ DROPBOX_CONTAINER_NAME = os.environ.get('DROPBOX_CONTAINER_NAME', 'dropbox')
 
 conn = cloudfiles.get_connection(username=cf_auth.username,
                                  api_key=cf_auth.apikey)
-# make sure we have the container
-container = conn.create_container(DROPBOX_CONTAINER_NAME)
-# make sure the container is public
-container.make_public()
+
+container = conn.get_container(DROPBOX_CONTAINER_NAME)
 
 if options.list:
     listing = container.list_objects_info()
