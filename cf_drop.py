@@ -9,9 +9,11 @@ import cloudfiles
 
 import cf_auth
 
+default_domain = os.environ.get('DROPBOX_DOMAIN_NAME')
+
 usage = 'Usage: %prog [options] path1 [path2 [...]]'
 parser = OptionParser(usage=usage)
-parser.add_option('-D', '--domain', dest='domain', default=None,
+parser.add_option('-D', '--domain', dest='domain', default=default_domain,
                   help='Domain to use instead of the container\'s public URI')
 parser.add_option('-l', '--list', dest='list', default=None,
                 action='store_true', help='Show your dropbox\'s listing')
