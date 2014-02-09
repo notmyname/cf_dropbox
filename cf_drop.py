@@ -19,6 +19,8 @@ parser.add_option('-l', '--list', dest='list', default=None,
                 action='store_true', help='Show your dropbox\'s listing')
 parser.add_option('-P', '--purge', dest='purge', default=None,
                 action='store_true', help='Purge the objects')
+parser.add_option('-d', '--delete', dest='delete', default=None,
+                action='store_true', help='Delete the objects')
 
 options, args = parser.parse_args()
 
@@ -45,6 +47,8 @@ for filename in args:
         obj = container.create_object(object_name)
         if options.purge:
             obj.purge_from_cdn()
+        elif options.delete:
+            container.delete_object(object_name)
         else:
             obj.load_from_filename(filename)
             obj.metadata['Original-Name'] = quote(filename)
@@ -54,4 +58,6 @@ for filename in args:
     else:
         if options.purge:
             print 'Purged',
+        elif options.delete:
+            print 'Deleted',
         print container_url + '/' + object_name
