@@ -50,9 +50,8 @@ for filename in args:
         elif options.delete:
             container.delete_object(object_name)
         else:
+            obj.metadata['original-name'] = quote(filename)
             obj.load_from_filename(filename)
-            obj.metadata['Original-Name'] = quote(filename)
-            obj.sync_metadata()
     except cloudfiles.errors.ResponseError, err:
         print >>sys.stderr, err
     else:
