@@ -1,9 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 
 import sys
 import os
 from optparse import OptionParser
 from urllib import quote
+
+sys.path.insert(0, '/Library/Python/2.7/site-packages')
 
 import cloudfiles
 
